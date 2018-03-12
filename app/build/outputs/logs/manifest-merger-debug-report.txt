@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
+ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\f906bfa82c727233921ec1808883ceeb\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\me\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\4e32659aa5222e480314ea4f213d5594\AndroidManifest.xml:2:1-11:12
 MERGED from [com.android.support:animated-vector-drawable:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.1.0.aar\e3596228117b169f3927b3dd44150363\AndroidManifest.xml:17:1-28:12
@@ -15,25 +15,25 @@ MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\me\.gradle\
 MERGED from [com.android.support:support-core-ui:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\support-core-ui-26.1.0.aar\d1bad388b8d5f49d22ed8e4edc4d7185\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-compat:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\support-compat-26.1.0.aar\e61625417e152653efae90280458609c\AndroidManifest.xml:17:1-31:12
 MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\042f56b739825c09380c1086302e27e6\AndroidManifest.xml:17:1-30:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
-INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
+INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
 	package
 		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:3:5-33
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
+		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-21:12
+		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:1-23:12
 		INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:5:5-19:19
+ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:5:5-20:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\f906bfa82c727233921ec1808883ceeb\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\me\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\f906bfa82c727233921ec1808883ceeb\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\me\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\4e32659aa5222e480314ea4f213d5594\AndroidManifest.xml:9:5-20
@@ -82,6 +82,14 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:16:17-77
 	android:name
 		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:16:27-74
+activity#com.example.me.war.PlayActivity
+ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:19:9-59
+	android:name
+		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:19:19-47
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:21:5-83
+	android:name
+		ADDED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml:21:22-64
 uses-sdk
 INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\me\Desktop\mobile\final-project-team-6\app\src\main\AndroidManifest.xml
