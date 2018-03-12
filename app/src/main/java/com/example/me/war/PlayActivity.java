@@ -297,6 +297,25 @@ public class PlayActivity extends AppCompatActivity{
         }
     }
 
+    public class addTwoCardsToDeckTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            String getURL = urls[0];
+
+            String results = null;
+            try {
+                results = NetworkUtils.doHTTPGet(getURL);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //mCurrentPlayerCard = PlayWarUtils.parseCardJSON(s);
+        }
+    }
     public void findWinner(Card compCard, Card playerCard) {
         //"ACE" "KING" "QUEEN" "JACK" 10 9 8 7 6 5 4 3 2
         int computerIntValue = getIntValue(compCard);
@@ -304,14 +323,23 @@ public class PlayActivity extends AppCompatActivity{
 
         if(computerIntValue > playerIntValue){
             Log.d("computer", "won this round");
-            // TODO: 3/12/2018 add both cards to computer deck and increase size by one
+            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+            numOfComputerCards = numOfComputerCards + 2;
+            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+            String addTwoCardsToComputerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, COMPUTER_PILE_ID, compCard.getCode(), playerCard.getCode());
+            new addTwoCardsToDeckTask().execute(addTwoCardsToComputerURL);
         }
         else if(computerIntValue < playerIntValue){
             Log.d("computer", "lost this round");
-            // TODO: 3/12/2018 add both cards to player deck and increase size by two
+            TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
+            numOfPlayerCards = numOfPlayerCards + 2;
+            numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
+            String addTwoCardsToPlayerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, PLAYER_PILE_ID, compCard.getCode(), playerCard.getCode());
+            new addTwoCardsToDeckTask().execute(addTwoCardsToPlayerURL);
         }
         else{
             Log.d("computer", "tied with player");
+            finish(); //currently just brings you back to the home screen
             // TODO: 3/12/2018 figure out what to do with ties
             // TODO: 3/12/2018 for now just display the you tied screen probably in a frame view like how loading symbol is done in weather
         }

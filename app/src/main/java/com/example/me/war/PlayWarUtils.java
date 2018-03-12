@@ -20,6 +20,7 @@ public class PlayWarUtils {
     final static String PILE_URL = "/pile/";
     final static String ADD_URL = "/add/?cards=";
     final static String GET_ONE_CARD = "/draw/bottom";
+
     //returns a url to create a new deck
     public static String getNewDeck(){
         return DOC_BASE_URL + CREATE_NEW_DECK_URL;
@@ -48,6 +49,10 @@ public class PlayWarUtils {
 
     public static String getPlayerCardURL(String deckID, String playerID){
         return DOC_BASE_URL + deckID + PILE_URL + playerID + GET_ONE_CARD;
+    }
+//https://deckofcardsapi.com/api/deck/<<deck_id>>/pile/<<pile_name>>/add/?cards=AS,2S
+    public static String addTwoCardsToDeck(String deckID, String pileID, String cardOneCode, String cardTwoCode){
+        return DOC_BASE_URL + deckID + PILE_URL + pileID + cardOneCode + "," +cardTwoCode;
     }
 
     //parse a newly created deck
