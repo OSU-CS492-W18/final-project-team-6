@@ -13,6 +13,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    // TODO: 3/12/2018 add activity for stats and add in sqlite to hold stats   
+    // TODO: 3/12/2018 add the share stuff to the app 
+    
     public void onPlayClick(View view) {
         StartPlayActivity();
     }

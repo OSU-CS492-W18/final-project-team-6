@@ -21,14 +21,16 @@ import java.util.ArrayList;
 
 public class PlayActivity extends AppCompatActivity{
     String DECK_ID = "";
+    //DO NOT USE FOR GAME PLAY USED JUST FOR CARD SETUP
     ArrayList<Card> mComputerSetUpCardsList = new ArrayList<>();
     ArrayList<Card> mPlayerSetUpCardsList = new ArrayList<>();
+
     String COMPUTER_PILE_ID = "computer";
     String PLAYER_PILE_ID = "player";
-
+    //USE FOR NORMAL GAME PLAY
     Card mCurrentComputerCard = null;
     Card mCurrentPlayerCard = null;
-
+    //USE FOR NORMAL GAME PLAY
     int numOfComputerCards = 0;
     int numOfPlayerCards = 0;
 
@@ -60,40 +62,48 @@ public class PlayActivity extends AppCompatActivity{
         //get computer flip
         String getNewComputerCard = PlayWarUtils.getComputerCardURL(DECK_ID, COMPUTER_PILE_ID);
         new getNewComputerCardTask().execute(getNewComputerCard);
-        TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
-        numOfPlayerCards = numOfPlayerCards - 1;
-        numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
-        TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
-        numOfComputerCards = numOfComputerCards - 1;
-        numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
         //get player flip
         String getNewPlayerCard = PlayWarUtils.getPlayerCardURL(DECK_ID, PLAYER_PILE_ID);
         new getNewPlayerCardTask().execute(getNewPlayerCard);
         if (mCurrentComputerCard != null && mCurrentPlayerCard != null) {
-            Log.d("yup", mComputerSetUpCardsList.get(0).getSuit());
+            //remove one card from players card count
+            TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
+            numOfPlayerCards = numOfPlayerCards - 1;
+            numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
+            //remove on card from computer card count
+            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+            numOfComputerCards = numOfComputerCards - 1;
+            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+            Log.d("yup", mCurrentPlayerCard.getSuit());
+            //show computer flip
             new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardComputer))
                     .execute(mCurrentComputerCard.getImage());
+            //show player flip
             new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardPlayer))
                     .execute(mCurrentPlayerCard.getImage());
-            //show computer flip
-            //show player flip
+            //find the winner of this round
             findWinner(mCurrentComputerCard, mCurrentPlayerCard);
-
-            //add cards to winning pile
-
         } else {
-            if (mCurrentComputerCard != null) {
-                //computer won
+            if (mCurrentComputerCard == null && mCurrentPlayerCard != null) {
                 Log.d("YOU", "LOST");
-            } else {
+                //computer won
+                // TODO: 3/12/2018 display the you lost screen probably in a frame view like how loading symbol is done in weather
+                // TODO: 3/12/2018 increment the lost count in sqlite by one
+            }
+            else if(mCurrentPlayerCard == null && mCurrentComputerCard != null) {
                 Log.d("YOU", "WON");
                 //you won
+                // TODO: 3/12/2018 display the you won screen probably in a frame view like how loading symbol is done in weather
+                // TODO: 3/12/2018 increment the win count in sqlite by one
             }
-            // show screen
+            else{
+                //Log.d("YOU", "TIED");
+                //you tied
+                // TODO: 3/12/2018 this cant happen someone must have cards
+            }
         }
+        //let the user beable to click the button again
         ((Button) findViewById(R.id.flipButton)).setEnabled(true);
-        // TODO: 2/15/2018 play a round
-        // TODO: 2/15/2018 at the end of a round check to see if one pile has 52 card if so diplay win screen with new buttons to start or share.
     }
 
     //thread to show the back of the card images
@@ -209,7 +219,7 @@ public class PlayActivity extends AppCompatActivity{
                 String setUpPlayerPile = PlayWarUtils.setUpPlayerPile(DECK_ID, PLAYER_PILE_ID, mPlayerSetUpCardsList);
                 new SetComputerPileTask().execute(setUpComputerPile);
                 new SetPlayerPileTask().execute(setUpPlayerPile);
-                Log.e("here","here_________________");
+                Log.e("here","here_________________5");
                 ((Button) findViewById(R.id.flipButton)).setEnabled(true);
             }
         }
@@ -294,13 +304,16 @@ public class PlayActivity extends AppCompatActivity{
 
         if(computerIntValue > playerIntValue){
             Log.d("computer", "won this round");
-            // add both cards to computer deck and increase size by two
+            // TODO: 3/12/2018 add both cards to computer deck and increase size by one
         }
         else if(computerIntValue < playerIntValue){
             Log.d("computer", "lost this round");
+            // TODO: 3/12/2018 add both cards to player deck and increase size by two
         }
         else{
             Log.d("computer", "tied with player");
+            // TODO: 3/12/2018 figure out what to do with ties
+            // TODO: 3/12/2018 for now just display the you tied screen probably in a frame view like how loading symbol is done in weather
         }
     }
 
