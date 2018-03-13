@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 3/12/2018 add activity for stats and add in sqlite to hold stats   
     // TODO: 3/12/2018 add the share stuff to the app 
-    
+
     public void onPlayClick(View view) {
         StartPlayActivity();
     }
@@ -35,10 +35,28 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-//    It should have multiple activities the user can navigate between.
-//    It should use at least one implicit intent to launch another app.
-//    It should communicate via HTTP(s) with a third-party API to provide data for the app and optionally to send data back to the API.
-//    It must implement activity lifecycle methods to ensure that activity-related data is handled elegantly through lifecycle events.
-//    It should either store user preferences (via SharedPreferences) or store data in device storage (using SQLite). You may do both of these things if you want.
-//    It should have a polished, well-styled user interface.
+/*  PROJECT REQUIREMENTS AND TODOLISTS
 
+    It should have multiple activities the user can navigate between.
+        PAGES NEEDED:
+            MainActiviy
+            PlayActivity
+            StatsActivity
+
+    It should use at least one implicit intent to launch another app.
+        Share Victory or Loss within PlayActivity
+        Share Stats within StatsActivity
+
+    It should communicate via HTTP(s) with a third-party API to provide data for the app and optionally to send data back to the API.
+        DeckOfCards API
+
+    It must implement activity lifecycle methods to ensure that activity-related data is handled elegantly through lifecycle events.
+
+
+    It should either store user preferences (via SharedPreferences) or store data in device storage (using SQLite). You may do both of these things if you want.
+
+
+    It should have a polished, well-styled user interface.
+        MEH
+
+*/
