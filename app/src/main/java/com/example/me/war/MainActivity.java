@@ -20,8 +20,25 @@ public class MainActivity extends AppCompatActivity {
         StartPlayActivity();
     }
 
+    public void onStatsClick(View view) {
+        StartStatsActivity();
+    }
+
     public void StartPlayActivity(){
         Intent playIntent = new Intent(this, PlayActivity.class );
         startActivity(playIntent);
     }
+
+    public void StartStatsActivity() {
+        Intent statsIntent = new Intent(this, StatsActivity.class );
+        startActivity(statsIntent);
+    }
 }
+
+//    It should have multiple activities the user can navigate between.
+//    It should use at least one implicit intent to launch another app.
+//    It should communicate via HTTP(s) with a third-party API to provide data for the app and optionally to send data back to the API.
+//    It must implement activity lifecycle methods to ensure that activity-related data is handled elegantly through lifecycle events.
+//    It should either store user preferences (via SharedPreferences) or store data in device storage (using SQLite). You may do both of these things if you want.
+//    It should have a polished, well-styled user interface.
+

@@ -26,7 +26,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.me.war.PlayActivity" />
+        <activity
+            android:name="com.example.me.war.PlayActivity"
+            android:parentActivityName="com.example.me.war.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.me.war.StatsActivity"
+            android:parentActivityName="com.example.me.war.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <meta-data
             android:name="android.support.VERSION"
