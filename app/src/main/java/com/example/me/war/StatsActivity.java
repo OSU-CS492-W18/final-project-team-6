@@ -46,7 +46,7 @@ public class StatsActivity extends AppCompatActivity {
 //                getString(R.string.pref_units_default_value)
 //        );
     }
-    
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
