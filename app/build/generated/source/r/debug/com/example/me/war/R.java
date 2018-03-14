@@ -2829,13 +2829,16 @@ public final class R {
     public static final int top=0x7f070085;
     public static final int topCards=0x7f070086;
     public static final int topPanel=0x7f070087;
-    public static final int tv_stats=0x7f070088;
-    public static final int uniform=0x7f070089;
-    public static final int up=0x7f07008a;
-    public static final int useLogo=0x7f07008b;
-    public static final int withText=0x7f07008c;
-    public static final int wrap=0x7f07008d;
-    public static final int wrap_content=0x7f07008e;
+    public static final int tv_stats_games_played=0x7f070088;
+    public static final int tv_stats_losses=0x7f070089;
+    public static final int tv_stats_win_loss_ratio=0x7f07008a;
+    public static final int tv_stats_wins=0x7f07008b;
+    public static final int uniform=0x7f07008c;
+    public static final int up=0x7f07008d;
+    public static final int useLogo=0x7f07008e;
+    public static final int withText=0x7f07008f;
+    public static final int wrap=0x7f070090;
+    public static final int wrap_content=0x7f070091;
   }
   public static final class integer {
     public static final int abc_config_activityDefaultDur=0x7f080000;

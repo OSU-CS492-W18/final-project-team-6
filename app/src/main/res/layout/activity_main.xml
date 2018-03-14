@@ -4,28 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.me.war.MainActivity"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.example.me.war.MainActivity">
 
     <Button
         android:id="@+id/StartButton"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="15dp"
         android:onClick="onPlayClick"
         android:text="Start"
-        android:textSize="30dp"
-        />
+        android:textSize="30sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp" />
+
     <Button
         android:id="@+id/StatsButton"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:onClick="onStatsClick"
         android:text="Stats"
-        android:textSize="30dp"
-        android:layout_centerHorizontal = "true"
+        android:textSize="30sp"
 
         />
 
