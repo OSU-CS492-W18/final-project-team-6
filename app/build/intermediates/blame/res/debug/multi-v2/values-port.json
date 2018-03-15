@@ -44,6 +44,21 @@
                     }
                 }
             ]
+        },
+        {
+            "outputFile": "C:\\Users\\Andrew\\Desktop\\Oregon State University\\Winter 2018\\CS_492\\Final_Project\\final-project-team-6\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Andrew\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\c24ccd7f17c3bcc2668bc07997c80adc\\res\\values-port\\values-port.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "55",
+                        "endOffsets": "106"
+                    }
+                }
+            ]
         }
     ]
 }
