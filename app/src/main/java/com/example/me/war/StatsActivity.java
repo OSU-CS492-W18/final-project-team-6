@@ -1,11 +1,14 @@
 package com.example.me.war;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -19,6 +22,7 @@ public class StatsActivity extends AppCompatActivity {
     private TextView mLossesTV;
     private TextView mGamesPlayedTV;
     private TextView mWinLossRatioTV;
+    Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,18 @@ public class StatsActivity extends AppCompatActivity {
         mLossesTV = findViewById(R.id.tv_stats_losses);
         mGamesPlayedTV = findViewById(R.id.tv_stats_games_played);
         mWinLossRatioTV= findViewById(R.id.tv_stats_win_loss_ratio);
+
+        btn = (Button)findViewById(R.id.share_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Body of what we want to share");
+                intent.putExtra(Intent.EXTRA_TEXT, "Here are my stats for War!");
+                startActivity(Intent.createChooser(intent, "Share using: "));
+            }
+        });
 
 
         mWinsTV.setText("Victories: HELLO WORLD I PLAY WAR AND WIN");
