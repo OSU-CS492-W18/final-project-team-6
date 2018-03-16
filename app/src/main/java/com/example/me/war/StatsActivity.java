@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,16 +14,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-/**
- * Created by David on 3/13/2018.
- */
-
 public class StatsActivity extends AppCompatActivity {
 
     private TextView mWinsTV;
     private TextView mLossesTV;
     private TextView mGamesPlayedTV;
-    private TextView mWinLossRatioTV;
+    //private TextView mWinLossRatioTV;
     Button btn;
     private SQLiteDatabase mDB;
 
@@ -40,27 +33,27 @@ public class StatsActivity extends AppCompatActivity {
         mWinsTV = findViewById(R.id.tv_stats_wins);
         mLossesTV = findViewById(R.id.tv_stats_losses);
         mGamesPlayedTV = findViewById(R.id.tv_stats_games_played);
-        mWinLossRatioTV= findViewById(R.id.tv_stats_win_loss_ratio);
+        //mWinLossRatioTV= findViewById(R.id.tv_stats_win_loss_ratio);
 
-        btn = (Button)findViewById(R.id.share_btn);
+        btn = findViewById(R.id.share_btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 ArrayList<Integer> data = getDB();
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Wins: " + data.get(0).toString() + "\nLosses: " + data.get(1).toString() + "\nGames played: " + data.get(2).toString());
-                intent.putExtra(Intent.EXTRA_TEXT, "Here are my stats for War!");
+
+                intent.putExtra(Intent.EXTRA_TEXT, "Here are my stats for War! \nWins: " + data.get(0).toString() + "\nLosses: " + data.get(1).toString() + "\nGames played: " + data.get(2).toString());
                 startActivity(Intent.createChooser(intent, "Share using: "));
 
             }
         });
-        ArrayList<Integer> savedGamse = getDB();
-        //add1(savedGamse.get(0)); //--------------------------------------------------------ADD1
+        //ArrayList<Integer> savedGames = getDB();
+        /* add1(savedGames.get(0)); //--------------------------------------------------------ADD1 */
         setTVDB();
     }
     
-    private ArrayList<Integer> getDB(){
+    public ArrayList<Integer> getDB(){
         Cursor cursor = mDB.query(
                 WarContract.savedGames.TABLE_NAME,
                 null,
@@ -76,11 +69,11 @@ public class StatsActivity extends AppCompatActivity {
         while(cursor.moveToNext()){
             int wins = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_WON));
             savedGames.add(wins); // games[0]
-            //Log.e("WINS # SIZE: ", Integer.toString(savedGames.size()));
             int loss = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_LOST));
             savedGames.add(loss); //games[1]
             int played = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_PLAYED));
             savedGames.add(played); //games[2]
+            Log.e("getDB", "Wins: " + savedGames.get(0) + "\nLosses: " + savedGames.get(1) + "\nGames Played: " + savedGames.get(2));
         }
         cursor.close();
 
@@ -90,7 +83,7 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-
+        mDB.close();
     }
 
     public void add1(int vals){

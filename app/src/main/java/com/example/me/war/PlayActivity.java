@@ -1,5 +1,8 @@
 package com.example.me.war;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -34,6 +37,8 @@ public class PlayActivity extends AppCompatActivity{
     int numOfComputerCards = 0;
     int numOfPlayerCards = 0;
 
+    private SQLiteDatabase mDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +59,13 @@ public class PlayActivity extends AppCompatActivity{
         Log.e("here","here_________________1");
         new SetNewDeckTask().execute(newDeckURL);
         Log.e("here","here_________________2");
+
+        WarDBHelper dbHelper = new WarDBHelper(this);
+        mDB = dbHelper.getWritableDatabase();
+
+//        ArrayList<Integer> savedGames = getDB();
+//        addWinToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
+//        Log.e("onCreate ", "Wins: " + savedGames.get(0) + "\nLosses: " + savedGames.get(1) + "\nGames Played: " + savedGames.get(2));
     }
 
     public void doFlip(View view) {
@@ -89,12 +101,16 @@ public class PlayActivity extends AppCompatActivity{
                 //computer won
                 // TODO: 3/12/2018 display the you lost screen probably in a frame view like how loading symbol is done in weather
                 // TODO: 3/12/2018 increment the lost count in sqlite by one
+                ArrayList<Integer> savedGames = getDB();
+                addLossToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
             }
             else if(mCurrentPlayerCard == null && mCurrentComputerCard != null) {
                 Log.d("YOU", "WON");
                 //you won
                 // TODO: 3/12/2018 display the you won screen probably in a frame view like how loading symbol is done in weather
                 // TODO: 3/12/2018 increment the win count in sqlite by one
+                ArrayList<Integer> savedGames = getDB();
+                addWinToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
             }
             else{
                 //Log.d("YOU", "TIED");
@@ -364,5 +380,61 @@ public class PlayActivity extends AppCompatActivity{
             default: Log.e("Cur Value = ", curCard.getValue());  break;
         }
         return i;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDB.close();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDB.close();
+    }
+
+    public ArrayList<Integer> getDB(){
+        Cursor cursor = mDB.query(
+                WarContract.savedGames.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        ArrayList<Integer> savedGames = new ArrayList<>();
+        Log.e("PlayActivity","getDB");
+        while(cursor.moveToNext()){
+            int wins = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_WON));
+            savedGames.add(wins); // games[0]
+            int loss = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_LOST));
+            savedGames.add(loss); //games[1]
+            int played = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_PLAYED));
+            savedGames.add(played); //games[2]
+            Log.e("getDB: ", "Wins: " + savedGames.get(0) + "\nLosses: " + savedGames.get(1) + "\nGames Played: " + savedGames.get(2));
+        }
+        cursor.close();
+
+        return savedGames;
+    }
+
+    private void addWinToDB(int wins, int losses, int gamesPlayed) {
+            ContentValues values = new ContentValues();
+        //Log.e("addWinToDB ", "Wins: " + wins + "\nLosses: " + losses + "\nGames Played: " + gamesPlayed);
+            values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins + 1);
+            values.put(WarContract.savedGames.COLUMN_GAMES_LOST, losses);
+            values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
+            mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
+    }
+
+    private void addLossToDB(int wins, int loss, int gamesPlayed) {
+            ContentValues values = new ContentValues();
+            values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins);
+            values.put(WarContract.savedGames.COLUMN_GAMES_LOST, loss + 1);
+            values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
+            mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
     }
 }
