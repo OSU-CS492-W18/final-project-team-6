@@ -70,8 +70,8 @@ public class PlayActivity extends AppCompatActivity{
         WarDBHelper dbHelper = new WarDBHelper(this);
         mDB = dbHelper.getWritableDatabase();
 
-//        ArrayList<Integer> savedGames = getDB();
-//        addWinToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
+        ArrayList<Integer> savedGames = getDB();
+        addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
 //        Log.e("onCreate ", "Wins: " + savedGames.get(0) + "\nLosses: " + savedGames.get(1) + "\nGames Played: " + savedGames.get(2));
     }
 
@@ -109,7 +109,7 @@ public class PlayActivity extends AppCompatActivity{
                 // TODO: 3/12/2018 display the you lost screen probably in a frame view like how loading symbol is done in weather
                 // TODO: 3/12/2018 increment the lost count in sqlite by one
                 ArrayList<Integer> savedGames = getDB();
-                addLossToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
+                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
             }
             else if(mCurrentPlayerCard == null && mCurrentComputerCard != null) {
                 Log.d("YOU", "WON");
@@ -117,7 +117,7 @@ public class PlayActivity extends AppCompatActivity{
                 // TODO: 3/12/2018 display the you won screen probably in a frame view like how loading symbol is done in weather
                 // TODO: 3/12/2018 increment the win count in sqlite by one
                 ArrayList<Integer> savedGames = getDB();
-                addWinToDB(savedGames.get(1), savedGames.get(2), savedGames.get(0));
+                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
             }
             else{
                 //Log.d("YOU", "TIED");
@@ -559,7 +559,7 @@ public class PlayActivity extends AppCompatActivity{
 
     private void addWinToDB(int wins, int losses, int gamesPlayed) {
             ContentValues values = new ContentValues();
-        //Log.e("addWinToDB ", "Wins: " + wins + "\nLosses: " + losses + "\nGames Played: " + gamesPlayed);
+        Log.e("addWinToDB ", "Wins: " + wins + "\nLosses: " + losses + "\nGames Played: " + gamesPlayed);
             values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins + 1);
             values.put(WarContract.savedGames.COLUMN_GAMES_LOST, losses);
             values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
