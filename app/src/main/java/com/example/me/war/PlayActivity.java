@@ -6,13 +6,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonWriter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +32,9 @@ public class PlayActivity extends AppCompatActivity{
     //DO NOT USE FOR GAME PLAY USED JUST FOR CARD SETUP
     ArrayList<Card> mComputerSetUpCardsList = new ArrayList<>();
     ArrayList<Card> mPlayerSetUpCardsList = new ArrayList<>();
+
+    ArrayList<Card> warComputerList = new ArrayList<>();
+    ArrayList<Card> warPlayerList = new ArrayList<>();
 
     String COMPUTER_PILE_ID = "computer";
     String PLAYER_PILE_ID = "player";
@@ -43,7 +51,6 @@ public class PlayActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-
         ((Button) findViewById(R.id.flipButton)).setEnabled(false);
         ImageView temp = (ImageView)(findViewById(R.id.PlayingCardComputerDeck));
         temp.setImageResource(R.mipmap.ic_cardback);
@@ -332,6 +339,133 @@ public class PlayActivity extends AppCompatActivity{
             //mCurrentPlayerCard = PlayWarUtils.parseCardJSON(s);
         }
     }
+
+    public void doWar(){
+//        String getNewComputerCard = PlayWarUtils.getComputerCardURL(DECK_ID, COMPUTER_PILE_ID);
+//        String getNewPlayerCard = PlayWarUtils.getComputerCardURL(DECK_ID, PLAYER_PILE_ID);
+//        String results = null;
+//        Card computerCard1 = null;
+//        Card computerCard2 = null;
+//        Card computerCard3 = null;
+//        Card computerCard4 = null;
+//        Card playerCard1 = null;
+//        Card playerCard2 = null;
+//        Card playerCard3 = null;
+//        Card playerCard4 = null;
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(results != null){
+//            computerCard1 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        results = null;
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(results != null){
+//            computerCard2 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        results = null;
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(results != null){
+//            computerCard3 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        results = null;
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(results != null) {
+//            computerCard4 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        results = null;
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        if(results != null) {
+//            playerCard1 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        if(results != null) {
+//            playerCard2 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        if(results != null) {
+//            playerCard3 = PlayWarUtils.parseCardJSON(results);
+//        }
+//        try {
+//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        if(results != null) {
+//            playerCard4 = PlayWarUtils.parseCardJSON(results);
+//        }
+//
+//        warComputerList.add(computerCard1);
+//        warComputerList.add(computerCard2);
+//        warComputerList.add(computerCard3);
+//        warComputerList.add(computerCard4);
+//        warPlayerList.add(playerCard1);
+//        warPlayerList.add(playerCard2);
+//        warPlayerList.add(playerCard3);
+//        warPlayerList.add(playerCard4);
+//        numOfPlayerCards = numOfPlayerCards - warPlayerList.size();
+//        numOfPlayerCards = numOfPlayerCards - warComputerList.size();
+//        if(warComputerList.size() > warPlayerList.size()){
+//            // TODO: 3/15/2018 computer wins END
+//        }
+//        else if(warComputerList.size() < warPlayerList.size()){
+//            // TODO: 3/15/2018 player wins END
+//        }
+//        else{
+//            findWarWinner();
+//        }
+
+    }
+
+    public void findWarWinner(){
+//        Card lastComputerCard = warComputerList.get(warComputerList.size()-1);
+//        Card lastPlayerCard = warPlayerList.get(warPlayerList.size()-1);
+//        int computerIntValue = getIntValue(lastComputerCard);
+//        int playerIntValue = getIntValue(lastPlayerCard);
+//        if(computerIntValue > playerIntValue){
+//            Log.d("computer", "won this war");
+//            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+//            numOfComputerCards = numOfComputerCards + warComputerList.size() + warComputerList.size();
+//            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+//            String addTwoCardsToComputerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, COMPUTER_PILE_ID, compCard.getCode(), playerCard.getCode());
+//            new addTwoCardsToDeckTask().execute(addTwoCardsToComputerURL);
+//        }
+//        else if(computerIntValue < playerIntValue){
+//            Log.d("computer", "lost the war");
+//
+//        }
+//        else{
+//            doWar();
+//            Log.d("computer", "tied!!");
+//        }
+    }
+
     public void findWinner(Card compCard, Card playerCard) {
         //"ACE" "KING" "QUEEN" "JACK" 10 9 8 7 6 5 4 3 2
         int computerIntValue = getIntValue(compCard);
@@ -355,9 +489,11 @@ public class PlayActivity extends AppCompatActivity{
         }
         else{
             Log.d("computer", "tied with player");
-            finish(); //currently just brings you back to the home screen
-            // TODO: 3/12/2018 figure out what to do with ties
-            // TODO: 3/12/2018 for now just display the you tied screen probably in a frame view like how loading symbol is done in weather
+            doWar();
+            //finish(); //currently just brings you back to the home screen
+            // TODO: 3/12/2018 display war on screen
+            // TODO: 3/12/2018 run logic in the background
+            // TODO: 3/12/2018 call do flip
         }
     }
 
