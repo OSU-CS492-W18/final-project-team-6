@@ -2,7 +2,6 @@ package com.example.me.war;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -57,44 +56,42 @@ public class StatsActivity extends AppCompatActivity {
             }
         });
         ArrayList<Integer> savedGamse = getDB();
-        add1(savedGamse.get(0));
+        //add1(savedGamse.get(0)); //--------------------------------------------------------ADD1
         setTVDB();
-//        mWinsTV.setText("Victories: HELLO WORLD I PLAY WAR AND WIN");
-//        mLossesTV.setText("Defeats: DANG IT! I'VE LOST MY GAME");
-//        mGamesPlayedTV.setText("Games Played: I'VE PLAYED THIS MANY GAMES");
-//        mWinLossRatioTV.setText("Win - Loss Ratio: WIN/LOSS");
-
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        mForecastLocation = sharedPreferences.getString(
-//                getString(R.string.pref_location_key),
-//                getString(R.string.pref_location_default_value)
-//        );
-//        String temperatureUnitsValue = sharedPreferences.getString(
-//                getString(R.string.pref_units_key),
-//                getString(R.string.pref_units_default_value)
-//        );
     }
     
     private ArrayList<Integer> getDB(){
-        Cursor cursor = mDB.query(WarContract.savedGames.TABLE_NAME, null, null, null, null, null, null, null);
-
+        Cursor cursor = mDB.query(
+                WarContract.savedGames.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
         ArrayList<Integer> savedGames = new ArrayList<>();
-        Log.e("!!!!!!","hererererer");
+        Log.e("StatsActivity","getDB");
         while(cursor.moveToNext()){
             int wins = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_WON));
             savedGames.add(wins); // games[0]
-            Log.e("WINS # SIZE: ", Integer.toString(savedGames.size()));
+            //Log.e("WINS # SIZE: ", Integer.toString(savedGames.size()));
             int loss = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_LOST));
             savedGames.add(loss); //games[1]
             int played = cursor.getInt(cursor.getColumnIndex(WarContract.savedGames.COLUMN_GAMES_PLAYED));
             savedGames.add(played); //games[2]
         }
         cursor.close();
-        return savedGames;
 
+        return savedGames;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
 
+    }
 
     public void add1(int vals){
         ContentValues row = new ContentValues();
@@ -104,6 +101,8 @@ public class StatsActivity extends AppCompatActivity {
         mDB.update(WarContract.savedGames.TABLE_NAME, row, null, null);
 
     }
+
+
     private void setTVDB(){
         ArrayList<Integer> savedGames = getDB();
         if(savedGames.size() > 0) {
@@ -119,35 +118,4 @@ public class StatsActivity extends AppCompatActivity {
             mGamesPlayedTV.setText("Played: " + 0);
         }
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.forecast_item_detail, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_share:
-//                shareForecast();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
-//    public void shareForecast() {
-//        if (mForecastItem != null) {
-//            String shareText = "Weather for " + mForecastLocation +
-//                    ", " + DATE_FORMATTER.format(mForecastItem.dateTime) +
-//                    ": " + mForecastItem.temperature + mTemperatureUnitsAbbr +
-//                    " - " + mForecastItem.description +
-//                    " " + FORECAST_HASHTAG;
-//            ShareCompat.IntentBuilder.from(this)
-//                    .setType("text/plain")
-//                    .setText(shareText)
-//                    .setChooserTitle(R.string.share_chooser_title)
-//                    .startChooser();
-//        }
-//    }
 }

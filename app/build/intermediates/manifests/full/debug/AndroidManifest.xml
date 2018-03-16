@@ -28,7 +28,9 @@
         </activity>
         <activity
             android:name="com.example.me.war.PlayActivity"
-            android:parentActivityName="com.example.me.war.MainActivity" >
+            android:configChanges="orientation|keyboardHidden"
+            android:parentActivityName="com.example.me.war.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
