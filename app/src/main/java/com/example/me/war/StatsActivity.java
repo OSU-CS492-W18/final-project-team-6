@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,11 +18,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-/**
- * Created by David on 3/13/2018.
- */
-
 public class StatsActivity extends AppCompatActivity {
+
+    private static final String TAG_RETAINED_FRAGMENT = "RetainedFragment";
+
+    private RetainedFragment mRetainedFragment;
 
     private TextView mWinsTV;
     private TextView mLossesTV;
@@ -42,6 +43,20 @@ public class StatsActivity extends AppCompatActivity {
         mGamesPlayedTV = findViewById(R.id.tv_stats_games_played);
         mWinLossRatioTV= findViewById(R.id.tv_stats_win_loss_ratio);
 
+        // find the retained fragment on activity restarts
+        android.app.FragmentManager fm = getFragmentManager();
+        mRetainedFragment = (RetainedFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
+
+        // create the fragment and data the first time
+        if (mRetainedFragment == null) {
+            // add the fragment
+            mRetainedFragment = new RetainedFragment();
+            fm.beginTransaction().add(mRetainedFragment, TAG_RETAINED_FRAGMENT).commit();
+            // load data from a data source or perform any calculation
+            mRetainedFragment.setData(loadMyData());
+        }
+        Log.e("wins", Integer.toString(mRetainedFragment.getData().win));
+
         btn = (Button)findViewById(R.id.share_btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,11 +70,20 @@ public class StatsActivity extends AppCompatActivity {
 
             }
         });
-        ArrayList<Integer> savedGamse = getDB();
+        //ArrayList<Integer> savedGamse = getDB();
         //add1(savedGamse.get(0)); //--------------------------------------------------------ADD1
         setTVDB();
     }
-    
+
+    private retaineData loadMyData() {
+        ArrayList<Integer> savedGames = getDB();
+        retaineData newRetaine = new retaineData();
+        newRetaine.win = savedGames.get(0);
+        newRetaine.loss = savedGames.get(1);
+        newRetaine.GamesPlayed = savedGames.get(2);
+        return newRetaine;
+    }
+
     private ArrayList<Integer> getDB(){
         Cursor cursor = mDB.query(
                 WarContract.savedGames.TABLE_NAME,
@@ -104,17 +128,25 @@ public class StatsActivity extends AppCompatActivity {
 
 
     private void setTVDB(){
-        ArrayList<Integer> savedGames = getDB();
-        if(savedGames.size() > 0) {
-            int wins = savedGames.get(0);
-            int loss = savedGames.get(1);
-            int played = savedGames.get(2);
-            mWinsTV.setText("Victories: " + wins);
-            mLossesTV.setText("Losses: " + loss);
-            mGamesPlayedTV.setText("Played: " + played);
-        }else{
+        int mwin = mRetainedFragment.getData().win;
+        int mloss = mRetainedFragment.getData().loss;
+        int mgamesplayed = mRetainedFragment.getData().GamesPlayed;
+        if(mwin > 0 ){
+            mWinsTV.setText("Victories: " + mwin);
+        }
+        else{
             mWinsTV.setText("Victories: " + 0);
+        }
+        if(mloss > 0 ){
+            mLossesTV.setText("Losses: " + mloss);
+        }
+        else{
             mLossesTV.setText("Losses: " + 0);
+        }
+        if(mgamesplayed > 0 ){
+            mGamesPlayedTV.setText("Played: " + mgamesplayed);
+        }
+        else{
             mGamesPlayedTV.setText("Played: " + 0);
         }
     }
