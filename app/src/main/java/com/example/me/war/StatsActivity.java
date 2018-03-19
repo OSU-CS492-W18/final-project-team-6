@@ -132,22 +132,22 @@ public class StatsActivity extends AppCompatActivity {
         int mloss = mRetainedFragment.getData().loss;
         int mgamesplayed = mRetainedFragment.getData().GamesPlayed;
         if(mwin > 0 ){
-            mWinsTV.setText("Victories: " + mwin);
+            mWinsTV.setText("Number of Victories: " + mwin);
         }
         else{
-            mWinsTV.setText("Victories: " + 0);
+            mWinsTV.setText("Number of Victories: " + 0);
         }
         if(mloss > 0 ){
-            mLossesTV.setText("Losses: " + mloss);
+            mLossesTV.setText("Number of Losses: " + mloss);
         }
         else{
-            mLossesTV.setText("Losses: " + 0);
+            mLossesTV.setText("Number of Losses: " + 0);
         }
         if(mgamesplayed > 0 ){
-            mGamesPlayedTV.setText("Played: " + mgamesplayed);
+            mGamesPlayedTV.setText("Games Played: " + mgamesplayed);
         }
         else{
-            mGamesPlayedTV.setText("Played: " + 0);
+            mGamesPlayedTV.setText("Games Played: " + 0);
         }
     }
 }
