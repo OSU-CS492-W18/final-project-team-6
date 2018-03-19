@@ -99,9 +99,9 @@ public class PlayActivity extends AppCompatActivity{
                 WinLossLayout.setVisibility(LinearLayout.VISIBLE);
                 TextView winloss = (TextView) findViewById(R.id.WinLossText);
                 winloss.setText("Lost");
+                ArrayList<Integer> savedGames = getDB();
+                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
                 // TODO: 3/18/2018 you ran out of cards
-//                ArrayList<Integer> savedGames = getDB();
-//                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
                 return null;
             }
         }
@@ -123,8 +123,8 @@ public class PlayActivity extends AppCompatActivity{
                 // TODO: 3/18/2018 you ran out of cards
                 TextView winloss = (TextView) findViewById(R.id.WinLossText);
                 winloss.setText("Won");
-//                ArrayList<Integer> savedGames = getDB();
-//                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                ArrayList<Integer> savedGames = getDB();
+                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
                 return null;
             }
         }
@@ -141,6 +141,8 @@ public class PlayActivity extends AppCompatActivity{
             WinLossLayout.setVisibility(LinearLayout.VISIBLE);
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Won");
+            ArrayList<Integer> savedGames = getDB();
+            addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else if(playerWarList.get(playerWarList.size()-1) == null){
             // TODO: 3/18/2018 player lost
@@ -151,6 +153,8 @@ public class PlayActivity extends AppCompatActivity{
             WinLossLayout.setVisibility(LinearLayout.VISIBLE);
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Lost");
+            ArrayList<Integer> savedGames = getDB();
+            addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else {
             int computerIntValue = getIntValue(computerWarList.get(computerWarList.size() - 1));
@@ -225,6 +229,8 @@ public class PlayActivity extends AppCompatActivity{
             WinLossLayout.setVisibility(LinearLayout.VISIBLE);
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Won");
+            ArrayList<Integer> savedGames = getDB();
+            addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else if(playerWarDeck.size() < computerWarDeck.size()){
             // TODO: 3/18/2018 computer wins
@@ -235,6 +241,8 @@ public class PlayActivity extends AppCompatActivity{
             WinLossLayout.setVisibility(LinearLayout.VISIBLE);
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Lost");
+            ArrayList<Integer> savedGames = getDB();
+            addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else{
             Log.d("this", "SHOULD NOT HAPPEN");
