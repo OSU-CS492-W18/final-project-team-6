@@ -1,6 +1,7 @@
 package com.example.me.war;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -15,9 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,19 +32,10 @@ import java.util.ArrayList;
 
 public class PlayActivity extends AppCompatActivity{
     String DECK_ID = "";
-    //DO NOT USE FOR GAME PLAY USED JUST FOR CARD SETUP
     ArrayList<Card> mComputerSetUpCardsList = new ArrayList<>();
     ArrayList<Card> mPlayerSetUpCardsList = new ArrayList<>();
-
-    ArrayList<Card> warComputerList = new ArrayList<>();
-    ArrayList<Card> warPlayerList = new ArrayList<>();
-
     String COMPUTER_PILE_ID = "computer";
     String PLAYER_PILE_ID = "player";
-    //USE FOR NORMAL GAME PLAY
-    Card mCurrentComputerCard = null;
-    Card mCurrentPlayerCard = null;
-    //USE FOR NORMAL GAME PLAY
     int numOfComputerCards = 0;
     int numOfPlayerCards = 0;
 
@@ -52,6 +46,12 @@ public class PlayActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+
+        LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+        warLayout.setVisibility(LinearLayout.VISIBLE);
+        LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+        WinLossLayout.setVisibility(LinearLayout.INVISIBLE);
+
         ImageView temp = (ImageView)(findViewById(R.id.PlayingCardComputerDeck));
         temp.setImageResource(R.mipmap.ic_cardback);
         ImageView temp2 = (ImageView)(findViewById(R.id.PlayingCardComputer));
@@ -69,64 +69,223 @@ public class PlayActivity extends AppCompatActivity{
 
         WarDBHelper dbHelper = new WarDBHelper(this);
         mDB = dbHelper.getWritableDatabase();
-
-        ArrayList<Integer> savedGames = getDB();
-        addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
-//        Log.e("onCreate ", "Wins: " + savedGames.get(0) + "\nLosses: " + savedGames.get(1) + "\nGames Played: " + savedGames.get(2));
+    }
+    public void onPlayClick(View view) {
+        StartPlayActivity();
     }
 
-    public void doFlip(View view) {
-        ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+    public void StartPlayActivity(){
+        Intent playIntent = new Intent(this, PlayActivity.class );
+        startActivity(playIntent);
+    }
 
-        //get computer flip
-        String getNewComputerCard = PlayWarUtils.getComputerCardURL(DECK_ID, COMPUTER_PILE_ID);
-        new getNewComputerCardTask().execute(getNewComputerCard);
-        //get player flip
-        String getNewPlayerCard = PlayWarUtils.getPlayerCardURL(DECK_ID, PLAYER_PILE_ID);
-        new getNewPlayerCardTask().execute(getNewPlayerCard);
-        if (mCurrentComputerCard != null && mCurrentPlayerCard != null) {
-            //remove one card from players card count
-            TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
-            numOfPlayerCards = numOfPlayerCards - 1;
-            numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
-            //remove on card from computer card count
-            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
-            numOfComputerCards = numOfComputerCards - 1;
-            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
-            Log.d("yup", mCurrentPlayerCard.getSuit());
-            //show computer flip
-            new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardComputer))
-                    .execute(mCurrentComputerCard.getImage());
-            //show player flip
-            new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardPlayer))
-                    .execute(mCurrentPlayerCard.getImage());
-            //find the winner of this round
-            findWinner(mCurrentComputerCard, mCurrentPlayerCard);
-        } else {
-            if (mCurrentComputerCard == null && mCurrentPlayerCard != null) {
-                Log.d("YOU", "LOST");
-                //computer won
-                // TODO: 3/12/2018 display the you lost screen probably in a frame view like how loading symbol is done in weather
-                // TODO: 3/12/2018 increment the lost count in sqlite by one
-                ArrayList<Integer> savedGames = getDB();
-                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+
+
+    public Card pullCard(String playerOrComputer){
+        if(playerOrComputer == "player") {
+            if(numOfPlayerCards > 0) {
+                Card tempCard = mPlayerSetUpCardsList.remove(0);
+                TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
+                numOfPlayerCards = mPlayerSetUpCardsList.size();
+                Log.d("player size", "after drawn " + Integer.toString(numOfPlayerCards));
+                numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
+                return  tempCard;
             }
-            else if(mCurrentPlayerCard == null && mCurrentComputerCard != null) {
-                Log.d("YOU", "WON");
-                //you won
-                // TODO: 3/12/2018 display the you won screen probably in a frame view like how loading symbol is done in weather
-                // TODO: 3/12/2018 increment the win count in sqlite by one
-                ArrayList<Integer> savedGames = getDB();
-                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
-            }
-            else{
-                //Log.d("YOU", "TIED");
-                //you tied
-                // TODO: 3/12/2018 this cant happen someone must have cards
+            else {
+                ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+                LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+                warLayout.setVisibility(LinearLayout.INVISIBLE);
+                LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+                WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+                TextView winloss = (TextView) findViewById(R.id.WinLossText);
+                winloss.setText("Lost");
+                // TODO: 3/18/2018 you ran out of cards
+//                ArrayList<Integer> savedGames = getDB();
+//                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                return null;
             }
         }
-        //let the user beable to click the button again
-        ((Button) findViewById(R.id.flipButton)).setEnabled(true);
+        else {
+            if(numOfComputerCards > 0){
+                Card tempCard = mComputerSetUpCardsList.remove(0);
+                TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+                numOfComputerCards = mComputerSetUpCardsList.size();
+                numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+                Log.d("computer size", "after drawn " + Integer.toString(numOfComputerCards));
+                return  tempCard;
+            }
+            else {
+                ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+                LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+                warLayout.setVisibility(LinearLayout.INVISIBLE);
+                LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+                WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+                // TODO: 3/18/2018 you ran out of cards
+                TextView winloss = (TextView) findViewById(R.id.WinLossText);
+                winloss.setText("Won");
+//                ArrayList<Integer> savedGames = getDB();
+//                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                return null;
+            }
+        }
+    }
+
+    public void findWarWinner(ArrayList<Card> playerWarList, ArrayList<Card> computerWarList){
+        //"ACE" "KING" "QUEEN" "JACK" 10 9 8 7 6 5 4 3 2
+        if(computerWarList.get(computerWarList.size()-1) == null){
+            // TODO: 3/18/2018 computer lost
+            ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+            LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+            warLayout.setVisibility(LinearLayout.INVISIBLE);
+            LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+            WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+            TextView winloss = (TextView) findViewById(R.id.WinLossText);
+            winloss.setText("Won");
+        }
+        else if(playerWarList.get(playerWarList.size()-1) == null){
+            // TODO: 3/18/2018 player lost
+            ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+            LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+            warLayout.setVisibility(LinearLayout.INVISIBLE);
+            LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+            WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+            TextView winloss = (TextView) findViewById(R.id.WinLossText);
+            winloss.setText("Lost");
+        }
+        else {
+            int computerIntValue = getIntValue(computerWarList.get(computerWarList.size() - 1));
+            Log.e("computer value", Integer.toString(computerIntValue));
+            int playerIntValue = getIntValue(playerWarList.get(playerWarList.size() - 1));
+            Log.e("player value", Integer.toString(playerIntValue));
+            Log.e("computer size", Integer.toString(mComputerSetUpCardsList.size()));
+            Log.e("player size", Integer.toString(mPlayerSetUpCardsList.size()));
+            if (computerIntValue > playerIntValue) {
+                Log.d("computer", "won this war");
+                mComputerSetUpCardsList.addAll(computerWarList);
+                mComputerSetUpCardsList.addAll(playerWarList);
+                TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+                numOfComputerCards = mComputerSetUpCardsList.size();
+                numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+                Log.e("computer new size", Integer.toString(mComputerSetUpCardsList.size()));
+                Log.e("player new size", Integer.toString(mPlayerSetUpCardsList.size()));
+            } else if (computerIntValue < playerIntValue) {
+                Log.d("computer", "lost the war");
+                mPlayerSetUpCardsList.addAll(playerWarList);
+                mPlayerSetUpCardsList.addAll(computerWarList);
+                TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
+                numOfPlayerCards = mPlayerSetUpCardsList.size();
+                numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
+                Log.e("computer new size", Integer.toString(mComputerSetUpCardsList.size()));
+                Log.e("player new size", Integer.toString(mPlayerSetUpCardsList.size()));
+
+            } else {
+                Log.d("WARRRRRRRRR again", "!!!!!!!!!!!!!!!!!!");
+                LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+                warLayout.setVisibility(LinearLayout.INVISIBLE);
+                LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+                WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+                TextView winloss = (TextView) findViewById(R.id.WinLossText);
+                winloss.setText("Two wars in a row. No one wins");
+                TextView temp = (TextView) findViewById(R.id.you);
+                temp.setText("");
+            }
+        }
+    }
+
+    public void doWar(Card computerCard, Card playerCard){
+        ArrayList<Card> playerWarDeck = new ArrayList<>();
+        ArrayList<Card> computerWarDeck = new ArrayList<>();
+
+        Log.d("player size", "before drawn " + Integer.toString(numOfPlayerCards));
+        playerWarDeck.add(playerCard);
+        Log.d("player size", "before drawn " + Integer.toString(numOfPlayerCards));
+        playerWarDeck.add(pullCard("player"));
+        Log.d("player size", "before drawn " + Integer.toString(numOfPlayerCards));
+        playerWarDeck.add(pullCard("player"));
+        Log.d("player size", "before drawn " + Integer.toString(numOfPlayerCards));
+        playerWarDeck.add(pullCard("player"));
+        Log.d("computer size", "before drawn " + Integer.toString(numOfComputerCards));
+        computerWarDeck.add(computerCard);
+        Log.d("computer size", "before drawn " + Integer.toString(numOfComputerCards));
+        computerWarDeck.add(pullCard("computer"));
+        Log.d("computer size", "before drawn " + Integer.toString(numOfComputerCards));
+        computerWarDeck.add(pullCard("computer"));
+        Log.d("computer size", "before drawn " + Integer.toString(numOfComputerCards));
+        computerWarDeck.add(pullCard("computer"));
+
+        if(playerWarDeck.size() == 4 && computerWarDeck.size() == 4){
+            findWarWinner(playerWarDeck, computerWarDeck);
+        }
+        else if(playerWarDeck.size() > computerWarDeck.size()){
+            // TODO: 3/18/2018 player wins
+            Log.e("PlayerWin", "------------------------");
+            LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+            warLayout.setVisibility(LinearLayout.INVISIBLE);
+            LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+            WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+            TextView winloss = (TextView) findViewById(R.id.WinLossText);
+            winloss.setText("Won");
+        }
+        else if(playerWarDeck.size() < computerWarDeck.size()){
+            // TODO: 3/18/2018 computer wins
+            Log.e("computer win", "----------------------------");
+            LinearLayout warLayout = (LinearLayout) findViewById(R.id.FLWarGame);
+            warLayout.setVisibility(LinearLayout.INVISIBLE);
+            LinearLayout WinLossLayout = (LinearLayout) findViewById(R.id.FLWinLostScreen);
+            WinLossLayout.setVisibility(LinearLayout.VISIBLE);
+            TextView winloss = (TextView) findViewById(R.id.WinLossText);
+            winloss.setText("Lost");
+        }
+        else{
+            Log.d("this", "SHOULD NOT HAPPEN");
+        }
+    }
+
+    public void findWinner(Card compCard, Card playerCard) {
+        //"ACE" "KING" "QUEEN" "JACK" 10 9 8 7 6 5 4 3 2
+        int computerIntValue = getIntValue(compCard);
+        int playerIntValue = getIntValue(playerCard);
+        if(computerIntValue > playerIntValue){
+            Log.d("computer", "won this round");
+            mComputerSetUpCardsList.add(compCard);
+            mComputerSetUpCardsList.add(playerCard);
+            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
+            numOfComputerCards = mComputerSetUpCardsList.size();
+            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
+        }
+        else if(computerIntValue < playerIntValue){
+            Log.d("computer", "lost this round");
+            mPlayerSetUpCardsList.add(compCard);
+            mPlayerSetUpCardsList.add(playerCard);
+            TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
+            numOfPlayerCards = mPlayerSetUpCardsList.size();
+            numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
+        }
+        else{
+            Log.d("WARRRRRRRRR", "!!!!!!!!!!!!!!!!!!");
+            doWar(compCard, playerCard);
+        }
+    }
+
+
+    public void doFlip(View view) {
+        //stops use of button
+        ((Button) findViewById(R.id.flipButton)).setEnabled(false);
+        Log.d("computer size", "before drawn " + Integer.toString(numOfComputerCards));
+        Card currentComputerCard = pullCard("computer");
+        Log.d("player size", "before drawn " + Integer.toString(numOfPlayerCards));
+        Card currentPlayerCard = pullCard("player");
+        //starts use of button
+        if(currentComputerCard == null || currentPlayerCard == null){
+
+        }
+        else{
+            ((Button) findViewById(R.id.flipButton)).setEnabled(true);
+            new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardComputer)).execute(currentComputerCard.getImage());
+            //show player flip
+            new DownloadImageTask((ImageView) findViewById(R.id.PlayingCardPlayer)).execute(currentPlayerCard.getImage());
+            findWinner(currentComputerCard, currentPlayerCard);
+        }
     }
 
     //thread to show the back of the card images
@@ -278,225 +437,6 @@ public class PlayActivity extends AppCompatActivity{
         }
     }
 
-    public class getNewComputerCardTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            String getURL = urls[0];
-
-            String results = null;
-            try {
-                results = NetworkUtils.doHTTPGet(getURL);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return results;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (s != null) {
-                mCurrentComputerCard = PlayWarUtils.parseCardJSON(s);
-            }
-        }
-    }
-
-    public class getNewPlayerCardTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            String getURL = urls[0];
-
-            String results = null;
-            try {
-                results = NetworkUtils.doHTTPGet(getURL);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return results;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            mCurrentPlayerCard = PlayWarUtils.parseCardJSON(s);
-        }
-    }
-
-    public class addTwoCardsToDeckTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            String getURL = urls[0];
-
-            String results = null;
-            try {
-                results = NetworkUtils.doHTTPGet(getURL);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return results;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            //mCurrentPlayerCard = PlayWarUtils.parseCardJSON(s);
-        }
-    }
-
-    public void doWar(){
-//        String getNewComputerCard = PlayWarUtils.getComputerCardURL(DECK_ID, COMPUTER_PILE_ID);
-//        String getNewPlayerCard = PlayWarUtils.getComputerCardURL(DECK_ID, PLAYER_PILE_ID);
-//        String results = null;
-//        Card computerCard1 = null;
-//        Card computerCard2 = null;
-//        Card computerCard3 = null;
-//        Card computerCard4 = null;
-//        Card playerCard1 = null;
-//        Card playerCard2 = null;
-//        Card playerCard3 = null;
-//        Card playerCard4 = null;
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(results != null){
-//            computerCard1 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        results = null;
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(results != null){
-//            computerCard2 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        results = null;
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(results != null){
-//            computerCard3 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        results = null;
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewComputerCard);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(results != null) {
-//            computerCard4 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        results = null;
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        if(results != null) {
-//            playerCard1 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        if(results != null) {
-//            playerCard2 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        if(results != null) {
-//            playerCard3 = PlayWarUtils.parseCardJSON(results);
-//        }
-//        try {
-//            results = NetworkUtils.doHTTPGet(getNewPlayerCard);
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
-//        if(results != null) {
-//            playerCard4 = PlayWarUtils.parseCardJSON(results);
-//        }
-//
-//        warComputerList.add(computerCard1);
-//        warComputerList.add(computerCard2);
-//        warComputerList.add(computerCard3);
-//        warComputerList.add(computerCard4);
-//        warPlayerList.add(playerCard1);
-//        warPlayerList.add(playerCard2);
-//        warPlayerList.add(playerCard3);
-//        warPlayerList.add(playerCard4);
-//        numOfPlayerCards = numOfPlayerCards - warPlayerList.size();
-//        numOfPlayerCards = numOfPlayerCards - warComputerList.size();
-//        if(warComputerList.size() > warPlayerList.size()){
-//            // TODO: 3/15/2018 computer wins END
-//        }
-//        else if(warComputerList.size() < warPlayerList.size()){
-//            // TODO: 3/15/2018 player wins END
-//        }
-//        else{
-//            findWarWinner();
-//        }
-
-    }
-
-    public void findWarWinner(){
-//        Card lastComputerCard = warComputerList.get(warComputerList.size()-1);
-//        Card lastPlayerCard = warPlayerList.get(warPlayerList.size()-1);
-//        int computerIntValue = getIntValue(lastComputerCard);
-//        int playerIntValue = getIntValue(lastPlayerCard);
-//        if(computerIntValue > playerIntValue){
-//            Log.d("computer", "won this war");
-//            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
-//            numOfComputerCards = numOfComputerCards + warComputerList.size() + warComputerList.size();
-//            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
-//            String addTwoCardsToComputerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, COMPUTER_PILE_ID, compCard.getCode(), playerCard.getCode());
-//            new addTwoCardsToDeckTask().execute(addTwoCardsToComputerURL);
-//        }
-//        else if(computerIntValue < playerIntValue){
-//            Log.d("computer", "lost the war");
-//
-//        }
-//        else{
-//            doWar();
-//            Log.d("computer", "tied!!");
-//        }
-    }
-
-    public void findWinner(Card compCard, Card playerCard) {
-        //"ACE" "KING" "QUEEN" "JACK" 10 9 8 7 6 5 4 3 2
-        int computerIntValue = getIntValue(compCard);
-        int playerIntValue = getIntValue(playerCard);
-
-        if(computerIntValue > playerIntValue){
-            Log.d("computer", "won this round");
-            TextView numberOfComputerCardsView = (TextView) findViewById(R.id.numbOfComputerCards);
-            numOfComputerCards = numOfComputerCards + 2;
-            numberOfComputerCardsView.setText(String.valueOf(numOfComputerCards));
-            String addTwoCardsToComputerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, COMPUTER_PILE_ID, compCard.getCode(), playerCard.getCode());
-            new addTwoCardsToDeckTask().execute(addTwoCardsToComputerURL);
-        }
-        else if(computerIntValue < playerIntValue){
-            Log.d("computer", "lost this round");
-            TextView numberOfPlayerCardsView = (TextView) findViewById(R.id.numbOfPlayerCards);
-            numOfPlayerCards = numOfPlayerCards + 2;
-            numberOfPlayerCardsView.setText(String.valueOf(numOfPlayerCards));
-            String addTwoCardsToPlayerURL = PlayWarUtils.addTwoCardsToDeck(DECK_ID, PLAYER_PILE_ID, compCard.getCode(), playerCard.getCode());
-            new addTwoCardsToDeckTask().execute(addTwoCardsToPlayerURL);
-        }
-        else{
-            Log.d("computer", "tied with player");
-            doWar();
-            //finish(); //currently just brings you back to the home screen
-            // TODO: 3/12/2018 display war on screen
-            // TODO: 3/12/2018 run logic in the background
-            // TODO: 3/12/2018 call do flip
-        }
-    }
-
     public int getIntValue(Card curCard){
         int i = 0;
         switch (curCard.getValue()){
@@ -558,19 +498,19 @@ public class PlayActivity extends AppCompatActivity{
     }
 
     private void addWinToDB(int wins, int losses, int gamesPlayed) {
-            ContentValues values = new ContentValues();
+        ContentValues values = new ContentValues();
         Log.e("addWinToDB ", "Wins: " + wins + "\nLosses: " + losses + "\nGames Played: " + gamesPlayed);
-            values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins + 1);
-            values.put(WarContract.savedGames.COLUMN_GAMES_LOST, losses);
-            values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
-            mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
+        values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins + 1);
+        values.put(WarContract.savedGames.COLUMN_GAMES_LOST, losses);
+        values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
+        mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
     }
 
     private void addLossToDB(int wins, int loss, int gamesPlayed) {
-            ContentValues values = new ContentValues();
-            values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins);
-            values.put(WarContract.savedGames.COLUMN_GAMES_LOST, loss + 1);
-            values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
-            mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
+        ContentValues values = new ContentValues();
+        values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins);
+        values.put(WarContract.savedGames.COLUMN_GAMES_LOST, loss + 1);
+        values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
+        mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
     }
 }
