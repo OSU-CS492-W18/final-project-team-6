@@ -1,5 +1,6 @@
 package com.example.me.war;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -27,6 +28,8 @@ public class WarDBHelper extends SQLiteOpenHelper {
                         ");";
         db.execSQL(SQL_CREATE_GAMES_TABLE);
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {

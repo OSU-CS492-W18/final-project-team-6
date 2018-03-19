@@ -19,7 +19,6 @@ public class PlayWarUtils {
     final static String GET_26_CARDS_URL = "/draw/?count=26";
     final static String PILE_URL = "/pile/";
     final static String ADD_URL = "/add/?cards=";
-    final static String GET_ONE_CARD = "/draw/bottom";
 
     //returns a url to create a new deck
     public static String getNewDeck(){
@@ -43,18 +42,6 @@ public class PlayWarUtils {
         return DOC_BASE_URL + deckID + PILE_URL + playerID + ADD_URL + cardCodeList;
     }
 
-    public static String getComputerCardURL(String deckID, String computerID){
-        return DOC_BASE_URL + deckID + PILE_URL + computerID + GET_ONE_CARD;
-    }
-
-    public static String getPlayerCardURL(String deckID, String playerID){
-        return DOC_BASE_URL + deckID + PILE_URL + playerID + GET_ONE_CARD;
-    }
-//https://deckofcardsapi.com/api/deck/<<deck_id>>/pile/<<pile_name>>/add/?cards=AS,2S
-    public static String addTwoCardsToDeck(String deckID, String pileID, String cardOneCode, String cardTwoCode){
-        return DOC_BASE_URL + deckID + PILE_URL + pileID + cardOneCode + "," +cardTwoCode;
-    }
-
     //parse a newly created deck
     public static Deck parseNewDeckJSON(String deckResultJSON) {
         try {
@@ -67,28 +54,6 @@ public class PlayWarUtils {
             Log.d("returns: ", deckResultJSON);
             return deck;
         }catch (JSONException e){
-            return null;
-        }
-    }
-    public static Card parseCardJSON(String cardResultJSON){
-        try{
-            Card card = new Card();
-            JSONObject cardResultObj = new JSONObject(cardResultJSON);
-            JSONArray cardsList = cardResultObj.getJSONArray("cards");
-            for (int i = 0; i <=0; i++){
-                JSONObject jsonCard = cardsList.getJSONObject(i);
-                card.setImage(jsonCard.getString("image"));
-                card.setValue(jsonCard.getString("value"));
-                card.setSuit(jsonCard.getString("suit"));
-                card.setCode(jsonCard.getString("code"));
-            }
-            if(cardsList.length() == 0){
-                return null;
-            }
-            else{
-                return card;
-            }
-        }catch(JSONException e){
             return null;
         }
     }

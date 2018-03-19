@@ -16,6 +16,21 @@
             ]
         },
         {
+            "outputFile": "C:\\Users\\me\\Desktop\\mobile\\temp\\final-project-team-6\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\me\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\0ed68e95944e8d50327b39bd71742448\\res\\values-v18\\values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        },
+        {
             "outputFile": "D:\\Code\\GitHub\\Mobile\\final-project-team-6\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
             "map": [
                 {
@@ -34,7 +49,7 @@
             "outputFile": "C:\\Users\\me\\Desktop\\mobile\\final-project-team-6\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\me\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\f906bfa82c727233921ec1808883ceeb\\res\\values-v18\\values-v18.xml",
+                    "source": "C:\\Users\\me\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\0ed68e95944e8d50327b39bd71742448\\res\\values-v18\\values-v18.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
