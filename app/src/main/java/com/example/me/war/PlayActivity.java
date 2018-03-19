@@ -192,6 +192,8 @@ public class PlayActivity extends AppCompatActivity{
                 winloss.setText("Two wars in a row. No one wins");
                 TextView temp = (TextView) findViewById(R.id.you);
                 temp.setText("");
+                ArrayList<Integer> savedGames = getDB();
+                addDrawToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
             }
         }
     }
@@ -518,6 +520,14 @@ public class PlayActivity extends AppCompatActivity{
         ContentValues values = new ContentValues();
         values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins);
         values.put(WarContract.savedGames.COLUMN_GAMES_LOST, loss + 1);
+        values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
+        mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
+    }
+
+    private void addDrawToDB(int wins, int loss, int gamesPlayed) {
+        ContentValues values = new ContentValues();
+        values.put(WarContract.savedGames.COLUMN_GAMES_WON, wins);
+        values.put(WarContract.savedGames.COLUMN_GAMES_LOST, loss);
         values.put(WarContract.savedGames.COLUMN_GAMES_PLAYED, gamesPlayed + 1);
         mDB.update(WarContract.savedGames.TABLE_NAME, values, null, null);
     }
