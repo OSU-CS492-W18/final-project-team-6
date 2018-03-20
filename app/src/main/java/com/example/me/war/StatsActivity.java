@@ -64,8 +64,8 @@ public class StatsActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 ArrayList<Integer> data = getDB();
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Wins: " + data.get(0).toString() + "\nLosses: " + data.get(1).toString() + "\nGames played: " + data.get(2).toString());
-                intent.putExtra(Intent.EXTRA_TEXT, "Here are my stats for War!");
+//                intent.putExtra(Intent.EXTRA_SUBJECT, "Wins: " + data.get(0).toString() + "\nLosses: " + data.get(1).toString() + "\nGames played: " + data.get(2).toString());
+                intent.putExtra(Intent.EXTRA_TEXT, "Here are my stats for War: \n" + "Wins: " + data.get(0).toString() + "\nLosses: " + data.get(1).toString() + "\nGames played: " + data.get(2).toString());
                 startActivity(Intent.createChooser(intent, "Share using: "));
 
             }
@@ -85,6 +85,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private ArrayList<Integer> getDB(){
+        Log.e("getDB","Getting data from database -------------");
         Cursor cursor = mDB.query(
                 WarContract.savedGames.TABLE_NAME,
                 null,
