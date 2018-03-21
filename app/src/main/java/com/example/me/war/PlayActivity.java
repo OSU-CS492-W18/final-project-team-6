@@ -38,6 +38,7 @@ public class PlayActivity extends AppCompatActivity{
     String PLAYER_PILE_ID = "player";
     int numOfComputerCards = 0;
     int numOfPlayerCards = 0;
+    Boolean warWin = false;
 
     private SQLiteDatabase mDB;
 
@@ -100,7 +101,10 @@ public class PlayActivity extends AppCompatActivity{
                 TextView winloss = (TextView) findViewById(R.id.WinLossText);
                 winloss.setText("Lost");
                 ArrayList<Integer> savedGames = getDB();
-                addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                if(warWin){
+                    Log.e("WinCardPull", "-------------------------------------------------------------");
+                    addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                }
                 // TODO: 3/18/2018 you ran out of cards
                 return null;
             }
@@ -124,7 +128,10 @@ public class PlayActivity extends AppCompatActivity{
                 TextView winloss = (TextView) findViewById(R.id.WinLossText);
                 winloss.setText("Won");
                 ArrayList<Integer> savedGames = getDB();
-                addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                if(warWin){
+                    Log.e("WinCardPull", "-------------------------------------------------------------");
+                    addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
+                }
                 return null;
             }
         }
@@ -142,6 +149,8 @@ public class PlayActivity extends AppCompatActivity{
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Won");
             ArrayList<Integer> savedGames = getDB();
+            Log.e("winWar", "-------------------------------------------------------------");
+            warWin = true;
             addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else if(playerWarList.get(playerWarList.size()-1) == null){
@@ -154,6 +163,8 @@ public class PlayActivity extends AppCompatActivity{
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Lost");
             ArrayList<Integer> savedGames = getDB();
+            Log.e("lossWar", "-------------------------------------------------------------");
+            warWin = true;
             addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else {
@@ -193,6 +204,7 @@ public class PlayActivity extends AppCompatActivity{
                 TextView temp = (TextView) findViewById(R.id.you);
                 temp.setText("");
                 ArrayList<Integer> savedGames = getDB();
+                Log.e("DrawWar", "-------------------------------------------------------------");
                 addDrawToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
             }
         }
@@ -232,6 +244,8 @@ public class PlayActivity extends AppCompatActivity{
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Won");
             ArrayList<Integer> savedGames = getDB();
+            warWin = true;
+            Log.e("WinDoWar", "-------------------------------------------------------------");
             addWinToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else if(playerWarDeck.size() < computerWarDeck.size()){
@@ -244,6 +258,8 @@ public class PlayActivity extends AppCompatActivity{
             TextView winloss = (TextView) findViewById(R.id.WinLossText);
             winloss.setText("Lost");
             ArrayList<Integer> savedGames = getDB();
+            warWin = true;
+            Log.e("LossDoWar", "-------------------------------------------------------------");
             addLossToDB(savedGames.get(0), savedGames.get(1), savedGames.get(2));
         }
         else{
